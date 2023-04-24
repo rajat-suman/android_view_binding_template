@@ -1,0 +1,192 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id "com.google.dagger.hilt.android"
+    id "kotlin-kapt"
+    id "kotlin-parcelize"
+    id 'androidx.navigation.safeargs.kotlin' // For Direction and Safe Args
+}
+
+android {
+
+    signingConfigs {
+
+        debug {
+            keyAlias 'key0'
+            storePassword 'apptunix123'
+            keyPassword 'apptunix123'
+            storeFile file('/Users/apptunix/Desktop/Treatz/treatz_keyStore.jks')
+        }
+
+        release {
+            keyAlias 'key0'
+            storePassword 'apptunix123'
+            keyPassword 'apptunix123'
+            storeFile file('/Users/apptunix/Desktop/Treatz/treatz_keyStore.jks')
+        }
+
+        staging {
+            keyAlias 'key0'
+            storePassword 'apptunix123'
+            keyPassword 'apptunix123'
+            storeFile file('/Users/apptunix/Desktop/Treatz/treatz_keyStore.jks')
+        }
+    }
+
+    namespace 'com.treatz'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.viewBindingTemplate"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    buildTypes {
+
+        android.applicationVariants.all { variant ->
+            variant.outputs.all {
+                outputFileName = "Android_${gitBranch()}_${variant.name}.apk"
+            }
+        }
+
+        getByName("debug") {
+            applicationIdSuffix = ".debug"
+            shrinkResources  false
+            buildConfigField("String", "BASE_URL", "\"https://telehelthdev.webdevelopmentsolution.net/\"")
+            buildConfigField("String", "API_KEY", "\"AIzaSyBI7P6OXK12VE69SzZYf5JP_BcVWl2A77M\"")
+        }
+
+        getByName("release") {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            shrinkResources  false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField("String", "BASE_URL", "\"https://apitelehealth.webdevelopmentsolution.net/\"")
+            buildConfigField("String", "API_KEY", "\"AIzaSyBI7P6OXK12VE69SzZYf5JP_BcVWl2A77M\"")
+        }
+
+        create("staging") {
+            signingConfig signingConfigs.staging
+            applicationIdSuffix = ".debugStaging"
+            debuggable true
+            shrinkResources  false
+            matchingFallbacks = ['release']
+            buildConfigField("String", "BASE_URL", "\"https://apitelehealth.webdevelopmentsolution.net/\"")
+            buildConfigField("String", "API_KEY", "\"AIzaSyBI7P6OXK12VE69SzZYf5JP_BcVWl2A77M\"")
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    //This allows the Hilt annotation processors to be isolating so they are only invoked when necessary
+    hilt {
+        enableAggregatingTask = true
+    }
+}
+
+kapt {
+    correctErrorTypes = true
+}
+
+static def gitBranch() {
+
+    def branch = ""
+    def proc = "git rev-parse --abbrev-ref HEAD".execute()
+    proc.in.eachLine { line -> branch = line }
+    proc.err.eachLine { line -> println line }
+    proc.waitFor()
+    branch
+
+}
+
+
+dependencies {
+
+    //Imported module
+    implementation project(path: ':dotsindicator')
+
+    //Basic Module
+    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
+
+    //Testing
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    //Kotlin CoRoutines
+    implementation("com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+
+    //Hilt
+    implementation('com.google.dagger:hilt-android:2.45')
+    kapt('com.google.dagger:hilt-android-compiler:2.45')
+
+    //Phone Number Validator
+    implementation('io.michaelrocks:libphonenumber-android:8.13.7')
+
+    //sdp
+    implementation 'com.intuit.sdp:sdp-android:1.1.0'
+
+    //dataStore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    //KTX Activity & Fragment
+    implementation 'androidx.fragment:fragment-ktx:1.5.6'
+    implementation "androidx.activity:activity-ktx:1.7.0"
+
+    //navigation
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+
+    //mukesh otp
+    implementation 'com.github.rajputmukesh748:MukeshOtpView:1.0.0'
+
+    //ccp
+    implementation 'com.hbb20:ccp:2.7.0'
+
+    //Lottie
+    implementation 'com.airbnb.android:lottie:6.0.0'
+
+    //Rating
+    implementation 'me.zhanghai.android.materialratingbar:library:1.4.0'
+
+    //Flex box
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+
+    //Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.2")
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2")
+
+    //google
+    implementation 'com.google.android.libraries.places:places:3.1.0'
+
+    //Glide image loading library
+    implementation("com.github.bumptech.glide:glide:4.14.2")
+    kapt("com.github.bumptech.glide:compiler:4.14.2")
+
+
+}

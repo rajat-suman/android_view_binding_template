@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragments.splash.Splash">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivTopLeftPipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_round_pipe"
+        app:strokeColor="@null"
+        android:tint="@color/_2B0081"
+        android:transitionName="view1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_round_pipe"
+        app:tint="@color/_2B0081" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivBottomRightPipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:strokeColor="@null"
+        android:rotation="180"
+        android:src="@drawable/ic_round_pipe"
+        android:tint="@color/_2B0081"
+        android:transitionName="view2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_round_pipe"
+        app:tint="@color/_2B0081" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="wrap_content"
+        app:strokeColor="@null"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo_purple"
+        android:transitionName="view3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo_purple" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivCenterBubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:strokeColor="@null"
+        android:src="@drawable/ic_bubble_small_transparent"
+        android:transitionName="view4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_bubble_small_transparent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
