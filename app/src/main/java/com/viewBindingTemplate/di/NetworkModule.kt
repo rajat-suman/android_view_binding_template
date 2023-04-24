@@ -7,6 +7,7 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import com.viewBindingTemplate.BuildConfig
 import com.viewBindingTemplate.remote.APIRequest
 import com.viewBindingTemplate.remote.ConnectionInterceptor
+import com.viewBindingTemplate.remote.IgnoreFailureTypeAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -54,7 +55,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun gson(): Gson = GsonBuilder().setLenient().create()
+    fun gson(): Gson = GsonBuilder().setLenient().registerTypeAdapterFactory(IgnoreFailureTypeAdapterFactory()).create()
 
     @Singleton
     @Provides
