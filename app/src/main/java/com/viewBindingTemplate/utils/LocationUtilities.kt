@@ -10,7 +10,6 @@ import com.google.android.libraries.places.api.model.AddressComponent
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
-import com.viewBindingTemplate.BuildConfig
 import java.io.IOException
 import java.util.*
 
@@ -18,7 +17,7 @@ fun Context.getAddress(latitude: Double, longitude: Double): Address? {
     return try {
         val geocoder = Geocoder(this, Locale.getDefault())
         val addresses: List<Address>? = geocoder.getFromLocation(latitude, longitude, 1)
-        if (addresses != null && addresses.isNotEmpty()) {
+        if (!addresses.isNullOrEmpty()) {
             addresses[0]
         } else null
     } catch (ignored: IOException) {
@@ -56,7 +55,7 @@ fun fetchAddress(
 
 fun Context.locationSearch(requestCode: ActivityResultLauncher<Intent>) {
     if (!Places.isInitialized()) {
-        Places.initialize(this, BuildConfig.API_KEY)
+        Places.initialize(this, "") // Later replace with BuildConfig.API_KEY
     }
     val fields: List<Place.Field> = listOf(
         Place.Field.ADDRESS, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS_COMPONENTS

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.splash.Splash">
+    tools:context="com.viewBindingTemplate.sample.ui.fragments.splash.Splash">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivTopLeftPipe"
@@ -32,19 +32,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_round_pipe"
         app:tint="@color/_2B0081" />
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/ivLogo"
-        android:layout_width="wrap_content"
-        app:strokeColor="@null"
-        android:layout_height="wrap_content"
-        android:src="@drawable/logo_purple"
-        android:transitionName="view3"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo_purple" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivCenterBubble"

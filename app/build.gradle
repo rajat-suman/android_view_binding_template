@@ -9,31 +9,7 @@ plugins {
 
 android {
 
-    signingConfigs {
-
-        debug {
-            keyAlias 'key0'
-            storePassword 'apptunix123'
-            keyPassword 'apptunix123'
-            storeFile file('/Users/apptunix/Desktop/Treatz/treatz_keyStore.jks')
-        }
-
-        release {
-            keyAlias 'key0'
-            storePassword 'apptunix123'
-            keyPassword 'apptunix123'
-            storeFile file('/Users/apptunix/Desktop/Treatz/treatz_keyStore.jks')
-        }
-
-        staging {
-            keyAlias 'key0'
-            storePassword 'apptunix123'
-            keyPassword 'apptunix123'
-            storeFile file('/Users/apptunix/Desktop/Treatz/treatz_keyStore.jks')
-        }
-    }
-
-    namespace 'com.treatz'
+    namespace 'com.viewbinding'
     compileSdk 33
 
     defaultConfig {
@@ -62,7 +38,6 @@ android {
         }
 
         getByName("release") {
-            signingConfig signingConfigs.release
             minifyEnabled false
             shrinkResources  false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -71,7 +46,6 @@ android {
         }
 
         create("staging") {
-            signingConfig signingConfigs.staging
             applicationIdSuffix = ".debugStaging"
             debuggable true
             shrinkResources  false
@@ -118,13 +92,10 @@ static def gitBranch() {
 
 dependencies {
 
-    //Imported module
-    implementation project(path: ':dotsindicator')
-
     //Basic Module
-    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
@@ -137,7 +108,7 @@ dependencies {
 
     //Kotlin CoRoutines
     implementation("com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.0")
 
     //Hilt
     implementation('com.google.dagger:hilt-android:2.45')
@@ -153,8 +124,8 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     //KTX Activity & Fragment
-    implementation 'androidx.fragment:fragment-ktx:1.5.6'
-    implementation "androidx.activity:activity-ktx:1.7.0"
+    implementation 'androidx.fragment:fragment-ktx:1.6.0'
+    implementation "androidx.activity:activity-ktx:1.7.2"
 
     //navigation
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
@@ -164,7 +135,7 @@ dependencies {
     implementation 'com.github.rajputmukesh748:MukeshOtpView:1.0.0'
 
     //ccp
-    implementation 'com.hbb20:ccp:2.7.0'
+    implementation 'com.hbb20:ccp:2.7.2'
 
     //Lottie
     implementation 'com.airbnb.android:lottie:6.0.0'
@@ -185,8 +156,12 @@ dependencies {
     implementation 'com.google.android.libraries.places:places:3.1.0'
 
     //Glide image loading library
-    implementation("com.github.bumptech.glide:glide:4.14.2")
-    kapt("com.github.bumptech.glide:compiler:4.14.2")
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    kapt("com.github.bumptech.glide:compiler:4.15.1")
 
+    //Dexter Permission Check
+    implementation("com.karumi:dexter:6.2.3")
 
+    //Paging
+    implementation "androidx.paging:paging-runtime-ktx:3.1.1"
 }

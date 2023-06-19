@@ -1,12 +1,15 @@
 package com.viewBindingTemplate.remote
 
 import android.util.Log
-import com.viewBindingTemplate.R
-import com.viewBindingTemplate.controller.Controller
+import com.viewbinding.R
+import com.viewBindingTemplate.app.App
 import com.viewBindingTemplate.customclasses.datastore.DataStoreUtil
-import com.viewBindingTemplate.utils.*
+import com.viewBindingTemplate.utils.hideProgress
+import com.viewBindingTemplate.utils.sessionExpired
+import com.viewBindingTemplate.utils.showProgress
+import com.viewBindingTemplate.utils.showToast
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import javax.inject.Inject
@@ -16,19 +19,18 @@ class Api @Inject constructor(
 ) {
 
     suspend fun <T> handleAsyncCall(
-        sharedFlow: MutableSharedFlow<NetworkState<T>?>,
+        sharedFlow: Channel<NetworkState<T>?>,
         requestHandler: RequestHandler<T>,
         showLoader: Boolean = false,
     ) {
-        val context = Controller.context?.get()
+        val context = App.context?.get()
 
         if (!ConnectionManager.isInternetConnected()) {
-            sharedFlow.emit(NetworkState.NoInternet())
+            sharedFlow.send(NetworkState.NoInternet())
         }
-        hideSoftKeyBoard()
         if (showLoader) context?.showProgress()
 
-        sharedFlow.emit(NetworkState.Loading())
+        sharedFlow.send(NetworkState.Loading())
 
         try {
             val response = withContext(Dispatchers.IO) {
@@ -40,25 +42,25 @@ class Api @Inject constructor(
                     (user.message ?: context?.getString(
                         R.string.ok
                     ))?.let {
-                        sharedFlow.emit(
+                        sharedFlow.send(
                             NetworkState.Success(
                                 user.data, it
                             )
                         )
                     }
                 }
+
                 response.code() == 401 -> {
                     context?.let { sessionExpired(it, dataStoreUtil) }
-                    sharedFlow.emit(
-                        NetworkState.Error(
-                            Throwable(response.message()), code = 401
-                        )
+                    sharedFlow.send(
+                        NetworkState.Unauthorized()
                     )
                 }
+
                 else -> {
                     val message = response.errorBody()?.string()?.errorMessage()
-                    showToast(message ?: "")
-                    sharedFlow.emit(
+                    if (message.isNullOrEmpty().not()) showToast(message ?: "")
+                    sharedFlow.send(
                         NetworkState.Error(
                             Throwable(message), code = response.code()
                         )
@@ -68,8 +70,8 @@ class Api @Inject constructor(
         } catch (e: Exception) {
             val message = e.errorMessage()
             if (showLoader) hideProgress()
-            message?.let { showToast(it) }
-            sharedFlow.emit(NetworkState.Error(Throwable(message), code = -1))
+            if (message.isNullOrEmpty().not()) showToast(message ?: "")
+            sharedFlow.send(NetworkState.Error(Throwable(message), code = -1))
         }
     }
 
@@ -84,7 +86,7 @@ class Api @Inject constructor(
     }
 
     private fun parseErrorMessage(response: String?): String? {
-        if (response.isNullOrEmpty()) return ""
+        if (response.isNullOrEmpty()) return null
         if (isJson(response).not()) {
             Log.e("API_ERROR", response)
             return null
@@ -102,6 +104,7 @@ class Api @Inject constructor(
                 }
                 response
             }
+
             else -> {
                 response
             }
@@ -116,6 +119,5 @@ class Api @Inject constructor(
             false
         }
     }
-
 
 }

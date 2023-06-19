@@ -16,4 +16,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "View Binding Template"
 include ':app'
-include ':dotsindicator'

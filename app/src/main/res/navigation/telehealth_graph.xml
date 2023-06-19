@@ -2,12 +2,12 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/treatzGraph"
+    android:id="@+id/navGraph"
     app:startDestination="@id/splash">
 
     <fragment
         android:id="@+id/splash"
-        android:name="com.viewBindingTemplate.ui.fragments.splash.Splash"
+        android:name="com.viewBindingTemplate.sample.ui.fragments.splash.Splash"
         android:label="splash"
         tools:layout="@layout/splash">
 
@@ -23,12 +23,9 @@
 
     <fragment
         android:id="@+id/splashFinal"
-        android:name="com.viewBindingTemplate.ui.fragments.splash.SplashFinal"
+        android:name="com.viewBindingTemplate.sample.ui.fragments.splash.SplashFinal"
         android:label="SplashFinal"
         tools:layout="@layout/splash_final">
-
-
-
     </fragment>
 
 </navigation>

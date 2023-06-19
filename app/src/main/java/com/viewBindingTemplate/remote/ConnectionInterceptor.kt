@@ -1,7 +1,7 @@
 package com.viewBindingTemplate.remote
 
-import com.viewBindingTemplate.R
 import com.viewBindingTemplate.utils.showToast
+import com.viewbinding.R
 import okhttp3.CacheControl
 import okhttp3.Interceptor
 import java.util.concurrent.TimeUnit

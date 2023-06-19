@@ -21,5 +21,7 @@
     <string name="cancel">Cancel</string>
     <string name="to_access_this_feature_you_have_to_login_first">To access this feature you have to login first</string>
     <string name="dial_call">Dial Call</string>
+    <string name="camera_permission_required">Camera permission required</string>
+    <string name="notification_permission_required">Notification permission required</string>
 
 </resources>
