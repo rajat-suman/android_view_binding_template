@@ -2,23 +2,26 @@ package com.viewBindingTemplate.utils
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.viewBindingTemplate.R
 import com.viewBindingTemplate.customclasses.datastore.DataStoreUtil
 import com.viewBindingTemplate.customclasses.datastore.DatastoreKeys
-import com.viewBindingTemplate.databinding.ProgressLayoutBinding
-import com.viewBindingTemplate.ui.activity.mainActivity.MainActivity
+import com.viewBindingTemplate.main.activity.mainActivity.MainActivity
+import com.viewbinding.R
+import com.viewbinding.databinding.ProgressLayoutBinding
 
 /**
  * Show Alert Dialog
@@ -47,6 +50,28 @@ fun Activity.openDialog(
     }
 }
 
+fun Context.showAlertFullScreen(
+    @LayoutRes layout: Int,
+    cancelable: Boolean = false,
+    cancelableOnTouchOutside: Boolean = false,
+    viewSend: (View, Dialog) -> Unit,
+) {
+    try {
+        val dialog = Dialog(this, R.style.DialogFullScreen)
+        val view = LayoutInflater.from(this).inflate(layout, null)
+        dialog.setContentView(view)
+        dialog.setCancelable(cancelable)
+        dialog.setCanceledOnTouchOutside(cancelableOnTouchOutside)
+        dialog.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+        )
+        viewSend(view, dialog)
+        dialog.show()
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+}
+
 
 var isSessionPopupShowing = false
 fun sessionExpired(context: Context, dataStore: DataStoreUtil) {
@@ -66,7 +91,7 @@ fun sessionExpired(context: Context, dataStore: DataStoreUtil) {
                             context, R.id.fragmentContainerView
                         )
                     ) {
-                        popBackStack(R.id.treatzGraph, true)
+                        popBackStack(R.id.navGraph, true)
                         navigate(R.id.splash)
                     }
                 }
@@ -123,7 +148,7 @@ fun View.showSnackBar(title: String) {
 /**
  * Generic Bottom Sheet
  * */
-fun <T> Context.showBottomAlert(
+inline fun <reified T> Context.showBottomAlert(
     viewBinding: ViewBinding,
     callBack: (binding: T, dialog: BottomSheetDialog) -> Unit,
 ) {
@@ -132,6 +157,7 @@ fun <T> Context.showBottomAlert(
         setCanceledOnTouchOutside(false)
         setCancelable(false)
         show()
+        if (viewBinding !is T) return
         callBack(viewBinding as T, this)
     }
 }

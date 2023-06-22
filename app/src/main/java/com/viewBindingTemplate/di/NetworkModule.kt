@@ -4,7 +4,6 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import com.viewBindingTemplate.BuildConfig
 import com.viewBindingTemplate.remote.APIRequest
 import com.viewBindingTemplate.remote.ConnectionInterceptor
 import com.viewBindingTemplate.remote.IgnoreFailureTypeAdapterFactory
@@ -30,7 +29,7 @@ import javax.inject.Singleton
 class NetworkModule {
 
     @Provides
-    fun provideBaseUrl() = BuildConfig.BASE_URL
+    fun provideBaseUrl() = "" //BuildConfig.BASE_URL
 
     /**
      * Save Data in Cache

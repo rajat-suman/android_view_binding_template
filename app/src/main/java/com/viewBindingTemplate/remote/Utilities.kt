@@ -49,15 +49,15 @@ object Utilities {
         return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "image/jpg"
     }
 
-    fun <T> Flow<NetworkState<T>?>.collectWithState(
-        onLoading: () -> Unit = {},
-        onError: (message: Throwable, code: Int) -> Unit = { throwable: Throwable, i: Int ->
+    inline fun <T> Flow<NetworkState<T>?>.collectWithState(
+        crossinline onLoading: () -> Unit = {},
+        crossinline onError: (message: Throwable, code: Int) -> Unit = { throwable: Throwable, i: Int ->
             Log.e("API_ERROR", "Code $i and message is${throwable.message ?: ""}")
         },
-        onNoInternet: () -> Unit = {},
-        onSuccess: (T?, message: String) -> Unit,
-        onUnAuthorized: () -> Unit = {},
-        onOther: (NetworkState<T>?) -> Unit = {},
+        crossinline onNoInternet: () -> Unit = {},
+        crossinline onSuccess: (data: T?, message: String) -> Unit,
+        crossinline onUnAuthorized: () -> Unit = {},
+        crossinline onOther: (state: NetworkState<T>?) -> Unit = {},
     ) {
         mainThread {
             collectLatest {
@@ -67,6 +67,7 @@ object Utilities {
                     is NetworkState.Error -> onError(
                         it.error, it.code
                     )
+
                     is NetworkState.Unauthorized<T> -> onUnAuthorized()
                     is NetworkState.NoInternet<T> -> onNoInternet()
                     is NetworkState.Success<T> -> onSuccess(it.data, it.message)

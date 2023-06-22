@@ -1,5 +1,6 @@
 package com.viewBindingTemplate.remote
 
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.TypeAdapter
 import com.google.gson.TypeAdapterFactory
@@ -26,7 +27,7 @@ class IgnoreFailureTypeAdapterFactory : TypeAdapterFactory {
                 return try {
                     delegate.read(`in`)
                 } catch (e: java.lang.Exception) {
-                    e.printStackTrace()
+                    Log.e("ERROR_IN_MODEL",e.message.toString())
                     `in`.skipValue()
                     null
                 }

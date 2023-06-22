@@ -1,6 +1,7 @@
 package com.viewBindingTemplate.utils
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -11,6 +12,7 @@ import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
@@ -30,12 +32,15 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.hbb20.CountryCodePicker
-import com.viewBindingTemplate.R
-import com.viewBindingTemplate.controller.Controller
+import com.viewBindingTemplate.app.App
 import com.viewBindingTemplate.customclasses.coroutines.mainThread
-import com.viewBindingTemplate.ui.activity.mainActivity.MainActivity
+import com.viewBindingTemplate.customclasses.singleClickListener.setOnSingleClickListener
+import com.viewBindingTemplate.main.activity.mainActivity.MainActivity
 import com.viewBindingTemplate.utils.ConstantsValue.CURRENCY_SYMBOL
+import com.viewbinding.R
+import com.viewbinding.databinding.ImageFullScreenBinding
 import okhttp3.internal.toHexString
+
 
 /**
  * Read Text From EditText
@@ -48,9 +53,23 @@ fun EditText.readText() = text.trim().toString()
  * */
 fun showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
     mainThread {
-        Controller.context?.get()?.let {
-            Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
+        App.context?.get()?.let {
+            Toast.makeText(it, message, duration).show()
         }
+    }
+}
+
+fun Context.viewUrl(url: String) {
+    try {
+        ContextCompat.startActivity(
+            this, Intent(
+                Intent.ACTION_VIEW, Uri.parse(
+                    url
+                )
+            ), null
+        )
+    } catch (e: Exception) {
+        e.printStackTrace()
     }
 }
 
@@ -101,6 +120,7 @@ fun ImageView.loadImage(
     if (placeHolder != null) {
         request = request.placeholder(placeHolder)
     }
+
     if (circleCrop) {
         request = request.circleCrop()
     }
@@ -108,27 +128,18 @@ fun ImageView.loadImage(
     request.into(this)
 
     if (!url.isNullOrBlank() && showImageAlert) setOnClickListener {
-
+        context.showAlertFullScreen(layout = R.layout.image_full_screen,
+            cancelable = true,
+            cancelableOnTouchOutside = true,
+            viewSend = { view: View, dialog: Dialog ->
+                val binding = ImageFullScreenBinding.bind(view)
+                binding.ivCross.setOnSingleClickListener {
+                    dialog.dismiss()
+                }
+                binding.image.loadImage(url)
+            })
     }
-}
 
-
-fun toggleCardVisibility(
-    view: TextView,
-    constraint: ConstraintLayout,
-    arrowDownDrawable: Drawable?,
-    topArrowDrawable: Drawable?,
-) {
-    val flag = !constraint.isVisible
-    view.apply {
-        if (flag) {
-            constraint.visible()
-            setCompoundDrawablesWithIntrinsicBounds(null, null, arrowDownDrawable, null)
-        } else {
-            constraint.gone()
-            setCompoundDrawablesWithIntrinsicBounds(null, null, topArrowDrawable, null)
-        }
-    }
 }
 
 fun Fragment.getColor(@ColorRes colorId: Int) =
@@ -162,8 +173,8 @@ fun Context.openDialPad(phone: String) {
     }
 }
 
-fun Any?.toJson() = Gson().toJson(this)
-inline fun <reified T> String?.convertToClass() = Gson().fromJson(this, T::class.java)
+fun Any?.toJson(): String = Gson().toJson(this)
+inline fun <reified T> String?.convertToClass(): T = Gson().fromJson(this, T::class.java)
 
 fun Fragment.getColorStateList(@ColorRes colorId: Int) =
     this.requireContext().let { ContextCompat.getColorStateList(it, colorId) }
@@ -181,11 +192,11 @@ fun String.toHtml() = HtmlCompat.fromHtml(this, HtmlCompat.FROM_HTML_MODE_LEGACY
  * Input is String Id
  * */
 fun showToast(@StringRes stringId: Int, duration: Int = Toast.LENGTH_SHORT) {
-    Controller.context?.get()?.getString(stringId)?.let { showToast(it, duration) }
+    App.context?.get()?.getString(stringId)?.let { showToast(it, duration) }
 }
 
 fun hideSoftKeyBoard() = try {
-    (Controller.context?.get())?.apply {
+    (App.context?.get())?.apply {
         this as MainActivity
         val inputMethodManager =
             getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -206,8 +217,8 @@ fun Fragment.showGuestDialog() {
         positiveString = getString(R.string.ok),
         negativeString = getString(R.string.cancel)
     ) {
-        findNavController().popBackStack(R.id.treatzGraph, true)
-        findNavController().navigate(R.id.splash)
+        findNavController().popBackStack(R.id.navGraph, true)
+        findNavController().navigate(R.id.splash) // TODO: Please change this id to Login Fragment Id
     }
 }
 
@@ -215,8 +226,7 @@ fun Float?.formatUpto(digit: Int) = String.format("%.2f", (this ?: 0f)).replace(
 fun Double?.formatUpto(digit: Int) = String.format("%.2f", (this ?: 0.0)).replace(".00", "")
 
 fun String?.attachPriceTag(toStart: Boolean = true) =
-    if (toStart) "$CURRENCY_SYMBOL${this ?: ""}" else "${this ?: ""}$CURRENCY_SYMBOL"
-
+    if (toStart) "$CURRENCY_SYMBOL${this.orEmpty()}" else "${this.orEmpty()}$CURRENCY_SYMBOL"
 
 fun String?.makeCap() = this.orEmpty().replaceFirstChar { it.uppercase() }
 
