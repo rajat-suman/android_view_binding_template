@@ -128,8 +128,8 @@ dependencies {
     implementation "androidx.activity:activity-ktx:1.7.2"
 
     //navigation
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.6.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.6.0'
 
     //mukesh otp
     implementation 'com.github.rajputmukesh748:MukeshOtpView:1.0.0'
@@ -164,4 +164,7 @@ dependencies {
 
     //Paging
     implementation "androidx.paging:paging-runtime-ktx:3.1.1"
+
+    implementation "androidx.security:security-crypto:1.1.0-alpha06"
+    implementation group: 'commons-codec', name: 'commons-codec', version: '1.15'
 }

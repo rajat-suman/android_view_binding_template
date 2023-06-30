@@ -5,6 +5,7 @@ import android.webkit.MimeTypeMap
 import com.viewBindingTemplate.customclasses.coroutines.mainThread
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
+import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -19,6 +20,13 @@ object Utilities {
      */
     fun Any.getJsonRequestBody() =
         this.toString().toRequestBody("application/json".toMediaTypeOrNull())
+
+    /**
+     * Converts an object to a request body.
+     * @return The object converted to a JSON request body.
+     */
+    fun Any.getJsonRequestBody(contentType: MediaType?) =
+        this.toString().toRequestBody(contentType)
 
     /**
      * Converts an object to a form data request body.
